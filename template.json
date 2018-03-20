@@ -1,0 +1,130 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "uniqueSolutionPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Prefix used for resource names. Should be unique as this will also be used for domain names."
+            }
+        }
+    },
+    "variables": {
+        "customerWebApp": "[concat(parameters('uniqueSolutionPrefix'),'customerWebApp')]",
+        "factoryFloorWebApp": "[concat(parameters('uniqueSolutionPrefix'),'factoryFloorWebApp')]",
+        "iotHubName": "[concat(parameters('uniqueSolutionPrefix'),'iotHub')]",
+        "dpsName": "[concat(parameters('uniqueSolutionPrefix'),'dps')]",
+        "location": "[resourceGroup().location]",
+        "hostingPlanName": "[concat(parameters('uniqueSolutionPrefix'),'hostingplan')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Devices/IotHubs",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "capacity": 1
+            },
+            "name": "[variables('iotHubName')]",
+            "apiVersion": "2017-07-01",
+            "location": "[variables('location')]",
+            "properties": {},
+            "dependsOn": []
+        },
+        {
+            "name": "[variables('dpsName')]",
+            "type": "Microsoft.Devices/provisioningServices",
+            "apiVersion": "2017-11-15",
+            "location": "[variables('location')]",
+            "tags": {},
+            "properties": {
+                "iotHubs": [
+                    {
+                        "applyAllocationPolicy": true,
+                        "allocationWeight": 1,
+                        "connectionString": "[concat('HostName=',reference(resourceId('Microsoft.Devices/IoTHubs',variables('iotHubName')),'2017-07-01').hostName,';SharedAccessKeyName=iothubowner;SharedAccessKey=',listKeys(resourceId('Microsoft.Devices/IotHubs',variables('iotHubName')),'2017-07-01').value[0].primaryKey)]",
+                        "location": "[variables('location')]"
+                    }
+                ]
+            },
+            "sku": {
+                "name": "S1",
+                "capacity": 1
+            },
+            "resources": []
+        },
+        {
+            "apiVersion": "2016-09-01",
+            "name": "[variables('hostingPlanName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "HostingPlan"
+            },
+            "sku": {
+                "name": "B1",
+                "tier": "standard"
+            },
+            "properties": {
+                
+                "name": "[variables('hostingPlanName')]",
+                "workerSizeId": 0,
+                "reserved": true,
+                "hostingEnvironment": ""
+            }
+        },
+        {
+            "apiVersion": "2016-08-01",
+            "name": "[variables('customerWebApp')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[variables('hostingPlanName')]"
+            ],
+            "properties": {
+                "name": "[variables('customerWebApp')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "siteConfig": {
+                    "linuxFxVersion": "DOCKER"
+                }
+            },
+            "resources": []
+        },
+        {
+            "apiVersion": "2016-08-01",
+            "name": "[variables('factoryFloorWebApp')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[variables('hostingPlanName')]"
+            ],
+            "properties": {
+                "name": "[variables('factoryFloorWebApp')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "siteConfig": {
+                    "linuxFxVersion": "DOCKER"
+                }
+            },
+            "resources": [
+                {
+                    "name": "appsettings",
+                    "type": "config",
+                    "apiVersion": "2016-08-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites',variables('factoryFloorWebApp'))]"
+                    ],
+                    "tags": {
+                        "displayName": "appSettings"
+                    },
+                    "properties": {
+                        "DOCKER_CUSTOM_IMAGE_NAME": "mandrx/factoryfloorserver",
+                        "DOCKER_CUSTOM_IMAGE_RUN_COMMAND": "mandrx/factoryfloorserver",
+                        "WEBSITES_PORT":"8000",
+                        "CONNECTION_STRING": "[concat('HostName=',reference(variables('dpsName')).serviceOperationsHostName,';SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=',listkeys(variables('dpsName'),'2017-11-15').value[0].primaryKey)]"
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {}
+}
