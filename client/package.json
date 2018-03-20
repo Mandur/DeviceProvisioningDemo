@@ -1,0 +1,19 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deviceCreation.js",
+  "dependencies": {
+    "azure-iot-device-mqtt": "^1.4.0",
+    "azure-iot-provisioning-device-http": "^1.1.2",
+    "azure-iot-security-x509": "^1.0.3",
+    "dotenv": "^5.0.1",
+    "request": "^2.85.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -88,7 +88,25 @@
                     "linuxFxVersion": "DOCKER"
                 }
             },
-            "resources": []
+            "resources": [
+                {
+                    "name": "appsettings",
+                    "type": "config",
+                    "apiVersion": "2016-08-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites',variables('customerWebApp'))]"
+                    ],
+                    "tags": {
+                        "displayName": "appSettings"
+                    },
+                    "properties": {
+                        "DOCKER_CUSTOM_IMAGE_NAME": "mandrx/customerserver",
+                        "DOCKER_CUSTOM_IMAGE_RUN_COMMAND": "mandrx/customerserver",
+                        "WEBSITES_PORT":"8000",
+                        "CONNECTION_STRING": "[concat('HostName=',reference(variables('dpsName')).serviceOperationsHostName,';SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=',listkeys(variables('dpsName'),'2017-11-15').value[0].primaryKey)]"
+                    }
+                }
+            ]
         },
         {
             "apiVersion": "2016-08-01",
