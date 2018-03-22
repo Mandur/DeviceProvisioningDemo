@@ -7,7 +7,7 @@ This is a sample solution to illustrate a possible usage of DPS in a factory ori
 
 # Try it out
 To deploy this architecture on your Azure subscription, simply click on the button here below and provide with a unique name. Below, you will find information on the exact customer flow and how to use the deployed architecture.
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%Mandur%2FDeviceProvisioningDemo%2Fmaster%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMandur%2FDeviceProvisioningDemo%2Fmaster%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
