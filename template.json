@@ -58,19 +58,23 @@
             "name": "[variables('hostingPlanName')]",
             "type": "Microsoft.Web/serverfarms",
             "location": "[resourceGroup().location]",
+            "kind": "linux",
             "tags": {
                 "displayName": "HostingPlan"
             },
             "sku": {
-                "name": "B1",
+                "name": "B2",
                 "tier": "standard"
             },
             "properties": {
-                
                 "name": "[variables('hostingPlanName')]",
-                "workerSizeId": 0,
+                "workerTierName": null,
+                "adminSiteName": null,
+                "hostingEnvironmentProfile": null,
+                "perSiteScaling": false,
                 "reserved": true,
-                "hostingEnvironment": ""
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
             }
         },
         {
@@ -102,7 +106,7 @@
                     "properties": {
                         "DOCKER_CUSTOM_IMAGE_NAME": "mandrx/customerserver",
                         "DOCKER_CUSTOM_IMAGE_RUN_COMMAND": "mandrx/customerserver",
-                        "WEBSITES_PORT":"8000",
+                        "WEBSITES_PORT": "8000",
                         "CONNECTION_STRING": "[concat('HostName=',reference(variables('dpsName')).serviceOperationsHostName,';SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=',listkeys(variables('dpsName'),'2017-11-15').value[0].primaryKey)]"
                     }
                 }
@@ -137,12 +141,21 @@
                     "properties": {
                         "DOCKER_CUSTOM_IMAGE_NAME": "mandrx/factoryfloorserver",
                         "DOCKER_CUSTOM_IMAGE_RUN_COMMAND": "mandrx/factoryfloorserver",
-                        "WEBSITES_PORT":"8000",
+                        "WEBSITES_PORT": "8000",
                         "CONNECTION_STRING": "[concat('HostName=',reference(variables('dpsName')).serviceOperationsHostName,';SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=',listkeys(variables('dpsName'),'2017-11-15').value[0].primaryKey)]"
                     }
                 }
             ]
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "dps": {
+            "type": "string",
+            "value": "[concat('HostName=',reference(variables('dpsName')).serviceOperationsHostName,';SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=',listkeys(variables('dpsName'),'2017-11-15').value[0].primaryKey)]"
+        },
+        "id_scope": {
+            "type": "string",
+            "value": "[reference(variables('dpsName')).idScope]"
+        }
+    }
 }
