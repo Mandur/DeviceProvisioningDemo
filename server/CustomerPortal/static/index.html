@@ -14,17 +14,20 @@
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
+    <h1>Device tag updater</h1>
     <form id="form" action="/postForm" method="POST">
         <label for="deviceId">Enter your device id</label>
         <br/>
-        <input type="text" name="deviceId" />
+        <input type="text" name="deviceId" id="deviceId" />
         <br/>
         <label for="tags">Enter the wanted tags</label>
         <br/>
-        <textarea name="tags"></textarea > </br>
+        <textarea name="tags" id="tags"></textarea > </br>
             <input type="submit" value="Submit"/>
-    </form>
+    </form> 
+</br>
+
+    <p id="result">result</p>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -56,15 +59,21 @@
                     url: '/postForm',
                     type: 'POST',
                     data: data,
-                    contentType:  "application/json",
+                    contentType: "application/json",
                     success: function () {
                         console.log('it worked!');
+                        console.log(data);
+                        $('#result').text('success');
+                        $('#deviceId').val('');
+                        $('#tags').val('');
                     },
                     error: function () {
                         console.log('it failed!');
+                        $('#result').text="error";
                     }
                 });
-              
+
+
             });
         </script>
 </body>

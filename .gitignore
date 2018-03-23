@@ -62,4 +62,4 @@ typings/
 
 .env
 
-keys/
+keys/*

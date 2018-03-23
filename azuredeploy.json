@@ -149,9 +149,13 @@
         }
     ],
     "outputs": {
-        "dps": {
+        "factoryWebsiteUrl": {
             "type": "string",
-            "value": "[concat('HostName=',reference(variables('dpsName')).serviceOperationsHostName,';SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=',listkeys(variables('dpsName'),'2017-11-15').value[0].primaryKey)]"
+            "value": "[concat('http://',reference(variables('factoryFloorWebApp')).defaultHostName)]"
+        },
+        "customerWebsiteUrl": {
+            "type": "string",
+            "value": "[concat('http://',reference(variables('customerWebApp')).defaultHostName)]"
         },
         "id_scope": {
             "type": "string",

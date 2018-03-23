@@ -9,8 +9,8 @@ app.use(express.static('static'));
 //recreate root certificate
 //arg rootname = the name of your root Certificate
 app.post('/postForm', function (req, res) {
-  var tags = JSON.parse(req.body.tags);
-  console.log(tags.tags);
+  
+
   var provisioningServiceClient = require('azure-iot-provisioning-service').ProvisioningServiceClient;
   var registrationId = req.body.deviceId;
   var serviceClient = provisioningServiceClient.fromConnectionString(process.env.CONNECTION_STRING);
@@ -22,7 +22,10 @@ app.post('/postForm', function (req, res) {
       console.log("Etag: " + enrollmentResponse.etag);
       console.log(enrollmentResponse);
       etag = enrollmentResponse.etag;
-      enrollmentResponse.initialTwin = tags;
+      if(req.body.tags != null){
+        var tags = JSON.parse(req.body.tags);
+        enrollmentResponse.initialTwin = tags;
+      }
       enrollmentResponse.provisioningStatus = 'enabled';
       serviceClient.createOrUpdateIndividualEnrollment(enrollmentResponse, function (err, enrollmentResponse2) {
         if (err) {

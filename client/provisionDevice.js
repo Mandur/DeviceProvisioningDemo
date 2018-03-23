@@ -1,6 +1,6 @@
 require('dotenv').config();
 var fs = require('fs');
-var websiteUrl = process.env.websiteUrl;
+var websiteUrl = process.env.factoryWebsiteUrl;
 var deviceId = process.argv[2];
 
 //do the get request to create
