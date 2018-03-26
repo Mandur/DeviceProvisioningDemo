@@ -35,15 +35,16 @@ When you finish deploying the template, you should receive values as output, ple
     2. Machine can now speak with the IoT hub using connection that was sent back in the previous step. The leaf certificate will be used as authentication mechanism. 
 
 # Components
-Device Provisioning Service
-IoT Hub(s)
-Factory Server
-Device provisioning Library
-Custom end user Portal
+* Device Provisioning Service
+* IoT Hub(s)
+* Factory Server
+* Device provisioning Library
+* Custom end user Portal (Demo only, please replace it with your own!)
 
 
 # How to use it
-Provision the Id_scope and the factory floor website url in the file located on ./client/.env. To do so, just copy the strings between the quotes marks and you should be ready to provision your first Concentrator!
+After the deployment has finished, click on your Azure resource group -> deployments -> azuredeploy -> outputs and copy the three values you find here (as shown in the picture below). Use the id_scope and the factoryWebsiteUrl to provision the value within quote in the file located on ./client/.env. The customerWebsiteUrl will be used later on to activate your device.
+![picture alt](./img/output.png "output values")
 
 1. Simulate Concentrator creation
 In this section we are going to simulate the Concentrator creation and provision. To do it, go to the client folder and type the following command:
@@ -55,7 +56,7 @@ node provisionDevice.js <desiredDeviceId>
 
 This script will ask your factory floor server to generate new device keys, provision them on the Concentrator and create a device entry into our IoT Device Provisioning system. In this step, Concentrator created in the DPS will be set as inactive to avoid activation before the machine manufacturer could provision them with required information as in the following picture. You can see it by going to the DPS deployed in your Azure subscription and go to the blade "Manage enrollments"-> "Individual Enrollment".
 
-![picture alt](./img/unactivedevice.png "Use case workflow")
+![picture alt](./img/unactivedevice.png "inactive devices")
 
 Note that in this example the keys generated client side are stored in plain on the normal file system, this is definitely not a security best practice and you should save them in a secure location as they will serve as device authentication for the next steps. 
 
