@@ -17,8 +17,6 @@ var app = express();
 app.get('/createleaf', function (req, res) {
     var deviceId = req.query.deviceid;
     console.log("Generate Leaf Cert for + Device: " + deviceId);
-
-
     var commonName = deviceId;
 
     parentCert = fs.readFileSync('./keys/root/'  + '/_cert.pem').toString('ascii');

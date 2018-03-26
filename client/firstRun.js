@@ -3,11 +3,10 @@ var fs = require('fs');
 require('dotenv').config();
 
 
-console.log(process.argv[2]);
+console.log("connecting to : "+process.argv[2]);
 var registrationId = process.argv[2];
 var X509Security = require('azure-iot-security-x509').X509Security;
 
-console.log(process.env.ID_SCOPE);
 var ProvisioningDeviceClient = require('azure-iot-provisioning-device').ProvisioningDeviceClient;
 
 var provisioningHost = 'global.azure-devices-provisioning.net';

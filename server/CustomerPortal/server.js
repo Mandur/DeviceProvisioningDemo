@@ -19,10 +19,10 @@ app.post('/postForm', function (req, res) {
     if (err) {
       console.log('error reading the individual enrollment: ' + err);
     } else {
-      console.log("Etag: " + enrollmentResponse.etag);
-      console.log(enrollmentResponse);
+      console.log("updating device : "+enrollmentResponse);
       etag = enrollmentResponse.etag;
-      if(req.body.tags != null){
+      if(req.body.tags){
+        
         var tags = JSON.parse(req.body.tags);
         enrollmentResponse.initialTwin = tags;
       }
@@ -39,7 +39,6 @@ app.post('/postForm', function (req, res) {
   });
 
   res.send('updated device enrolment for: ' + registrationId);
-  res.send();
 });
 
 http.createServer(app).listen(8000);

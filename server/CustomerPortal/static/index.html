@@ -27,7 +27,7 @@
     </form> 
 </br>
 
-    <p id="result">result</p>
+    <p id="result"></p>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -53,7 +53,7 @@
             $("#form").submit(function (event) {
                 //prevent Default functionality
                 event.preventDefault();
-                var data = JSON.stringify(getFormData($("#form")));
+                var data = JSON.stringify(getFormData($("#form")));        
                 console.log(data);
                 $.ajax({
                     url: '/postForm',
@@ -63,7 +63,7 @@
                     success: function () {
                         console.log('it worked!');
                         console.log(data);
-                        $('#result').text('success');
+                        $('#result').text('submitted');
                         $('#deviceId').val('');
                         $('#tags').val('');
                     },
