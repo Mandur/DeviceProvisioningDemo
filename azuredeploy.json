@@ -15,7 +15,10 @@
         "iotHubName": "[concat(parameters('uniqueSolutionPrefix'),'iotHub')]",
         "dpsName": "[concat(parameters('uniqueSolutionPrefix'),'dps')]",
         "location": "[resourceGroup().location]",
-        "hostingPlanName": "[concat(parameters('uniqueSolutionPrefix'),'hostingplan')]"
+        "hostingPlanName": "[concat(parameters('uniqueSolutionPrefix'),'hostingplan')]",
+        "iotHubResourceId": "[resourceId('Microsoft.Devices/Iothubs', variables('iotHubName'))]",
+        "iotHubKeyName": "iothubowner",
+        "iotHubKeyResource": "[resourceId('Microsoft.Devices/Iothubs/Iothubkeys', variables('iotHubName'), variables('iotHubKeyName'))]"
     },
     "resources": [
         {
@@ -42,8 +45,9 @@
                     {
                         "applyAllocationPolicy": true,
                         "allocationWeight": 1,
-                        "connectionString": "[concat('HostName=',reference(resourceId('Microsoft.Devices/IoTHubs',variables('iotHubName')),'2017-07-01').hostName,';SharedAccessKeyName=iothubowner;SharedAccessKey=',listKeys(resourceId('Microsoft.Devices/IotHubs',variables('iotHubName')),'2017-07-01').value[0].primaryKey)]",
-                        "location": "[variables('location')]"
+                        "location": "[variables('location')]",
+                        "connectionString": "[concat('HostName=', reference(variables('iotHubResourceId')).hostName, ';SharedAccessKeyName=', variables('iotHubKeyName'), ';SharedAccessKey=', listkeys(variables('iotHubKeyResource'), '2017-07-01').primaryKey)]",
+                        "name": "[concat(variables('iotHubName'),'.azure-devices.net')]"
                     }
                 ]
             },
